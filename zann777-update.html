@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZANN 777 PLAY</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #090909;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 25px 15px;
+}
+
+h1 {
+  color: #ffd700;
+  letter-spacing: 3px;
+  text-shadow: 0 0 15px #d4a900;
+}
+
+.card {
+  max-width: 420px;
+  margin: 25px auto;
+  padding: 25px 18px;
+  background: linear-gradient(145deg,#202020,#101010);
+  border: 1px solid #a98720;
+  border-radius: 18px;
+  box-shadow: 0 0 25px #8a6b1640;
+}
+
+.balance {
+  background: #080808;
+  border: 1px solid #b99732;
+  border-radius: 12px;
+  padding: 18px;
+  margin: 20px 0;
+}
+
+.balance small {
+  color: #aaa;
+}
+
+.amount {
+  color: #ffd700;
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 8px;
+  transition: .3s;
+}
+
+.amount.changed {
+  transform: scale(1.15);
+}
+
+.reels {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 28px 0;
+}
+
+.reel {
+  width: 85px;
+  height: 85px;
+  display: grid;
+  place-items: center;
+  background: #080808;
+  border: 2px solid #d5ae38;
+  border-radius: 12px;
+  font-size: 42px;
+}
+
+.spinning {
+  animation: shake .12s infinite alternate;
+}
+
+@keyframes shake {
+  from { transform: translateY(-4px); }
+  to { transform: translateY(4px); }
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg,#a77a12,#ffe477);
+  color: #171000;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #555;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.refill {
+  background: #252525;
+  color: #ffd700;
+  border: 1px solid #b99732;
+}
+
+#message {
+  min-height: 25px;
+  color: #ffd700;
+  margin-top: 18px;
+}
+
+.info {
+  color: #aaa;
+  font-size: 12px;
+  line-height: 1.6;
+}
+</style>
+</head>
+
+<body>
+
+<h1>ZANN 777 PLAY</h1>
+<p>VIRTUAL ARCADE</p>
+
+<div class="card">
+
+  <h2>ARCADE SPIN</h2>
+
+  <div class="balance">
+    <small>SALDO KOIN VIRTUAL</small>
+    <div class="amount" id="balance">1.000</div>
+  </div>
+
+  <p>Biaya setiap putaran: <b>50 koin</b></p>
+
+  <div class="reels">
+    <div class="reel" id="r1">🍒</div>
+    <div class="reel" id="r2">⭐</div>
+    <div class="reel" id="r3">🔔</div>
+  </div>
+
+  <button id="spin" onclick="spin()">SPIN SEKARANG</button>
+
+  <button class="refill" onclick="refill()">
+    ISI ULANG KOIN DEMO
+  </button>
+
+  <div id="message">Selamat bermain!</div>
+
+  <p class="info">
+    Koin hanya untuk hiburan dan simulasi.
+    Tidak memiliki nilai uang dan tidak dapat diuangkan.
+  </p>
+
+</div>
+
+<script>
+let balance = 1000;
+let spinning = false;
+
+const symbols = ["🍒","⭐","🔔","💎","7️⃣","🍀"];
+
+function updateBalance() {
+  const el = document.getElementById("balance");
+  el.textContent = balance.toLocaleString("id-ID");
+
+  el.classList.add("changed");
+  setTimeout(() => el.classList.remove("changed"), 300);
+
+  document.getElementById("spin").disabled =
+    balance < 50 || spinning;
+}
+
+function spin() {
+  if (spinning || balance < 50) return;
+
+  spinning = true;
+  balance -= 50;
+  updateBalance();
+
+  document.getElementById("message").textContent =
+    "Putaran sedang berjalan...";
+
+  const reels = [
+    document.getElementById("r1"),
+    document.getElementById("r2"),
+    document.getElementById("r3")
+  ];
+
+  reels.forEach(reel => reel.classList.add("spinning"));
+
+  let interval = setInterval(() => {
+    reels.forEach(reel => {
+      reel.textContent =
+        symbols[Math.floor(Math.random() * symbols.length)];
+    });
+  }, 80);
+
+  setTimeout(() => {
+    clearInterval(interval);
+
+    reels.forEach(reel => {
+      reel.classList.remove("spinning");
+      reel.textContent =
+        symbols[Math.floor(Math.random() * symbols.length)];
+    });
+
+    spinning = false;
+    updateBalance();
+
+    document.getElementById("message").textContent =
+      balance === 0
+      ? "Koin demo habis! Silakan isi ulang."
+      : "PUTARAN SELESAI!";
+  }, 2500);
+}
+
+function refill() {
+  if (spinning) return;
+
+  balance = 1000;
+  updateBalance();
+
+  document.getElementById("message").textContent =
+    "Koin demo berhasil diisi ulang!";
+}
+
+updateBalance();
+</script>
+
+</body>
+</html>
