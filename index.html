@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZANN 777 PLAY</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #101010;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+header {
+  padding: 25px;
+  background: #202020;
+  color: gold;
+  font-size: 27px;
+  font-weight: bold;
+  border-bottom: 2px solid gold;
+}
+
+.card {
+  margin: 25px 15px;
+  padding: 25px 12px;
+  background: #202020;
+  border: 1px solid #806400;
+  border-radius: 18px;
+}
+
+h3 { color: gold; }
+
+.machine {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 35px 0;
+}
+
+.reel {
+  width: 85px;
+  height: 100px;
+  display: grid;
+  place-items: center;
+  background: #080808;
+  border: 3px solid gold;
+  border-radius: 13px;
+  font-size: 42px;
+}
+
+.spinning {
+  animation: spin .12s infinite;
+  box-shadow: 0 0 15px gold;
+}
+
+@keyframes spin {
+  0% { transform: translateY(-9px); }
+  50% { transform: translateY(9px); }
+  100% { transform: translateY(0); }
+}
+
+button {
+  padding: 16px 55px;
+  background: linear-gradient(45deg, #b8860b, gold);
+  border: 0;
+  border-radius: 12px;
+  color: black;
+  font-size: 19px;
+  font-weight: bold;
+}
+
+button:disabled { opacity: .5; }
+
+#hasil {
+  color: gold;
+  min-height: 25px;
+  margin-top: 25px;
+}
+</style>
+</head>
+
+<body>
+
+<header>ZANN 777 PLAY</header>
+
+<div class="card">
+  <h2>ARCADE SPIN</h2>
+  <p>Permainan hiburan dengan poin virtual</p>
+
+  <h3>POIN VIRTUAL</h3>
+  <h1 id="saldo">1000</h1>
+
+  <div class="machine">
+    <div class="reel" id="r1">🍒</div>
+    <div class="reel" id="r2">⭐</div>
+    <div class="reel" id="r3">🔔</div>
+  </div>
+
+  <button id="tombol" onclick="spin()">SPIN</button>
+
+  <p id="hasil">Tekan tombol untuk memulai!</p>
+</div>
+
+<script>
+const simbol = ["🍒","⭐","🔔","💎","7️⃣","🍀"];
+const ids = ["r1","r2","r3"];
+
+function spin() {
+  const tombol = document.getElementById("tombol");
+  const hasil = document.getElementById("hasil");
+
+  tombol.disabled = true;
+  hasil.textContent = "SEDANG BERPUTAR...";
+
+  let selesai = 0;
+
+  ids.forEach((id, index) => {
+    const reel = document.getElementById(id);
+    reel.classList.add("spinning");
+
+    const interval = setInterval(() => {
+      reel.textContent =
+        simbol[Math.floor(Math.random() * simbol.length)];
+    }, 80);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      reel.classList.remove("spinning");
+
+      selesai++;
+
+      if (selesai === 3) {
+        hasil.textContent = "PUTARAN SELESAI!";
+        tombol.disabled = false;
+      }
+    }, 2000 + index * 800);
+  });
+}
+</script>
+
+</body>
+</html>
